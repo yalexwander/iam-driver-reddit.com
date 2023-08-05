@@ -54,7 +54,7 @@ class RedditCatalogDriver extends AbstractCatalogDriver implements CatalogDriver
     public function canHandleQuery(string $query, array $opts = []): bool
     {
 
-        if (preg_match('/'. $this->getCode() .'/', $query)) {
+        if (preg_match('/' . $this->getCode() . '/', $query)) {
             return true;
         }
 
@@ -65,13 +65,14 @@ class RedditCatalogDriver extends AbstractCatalogDriver implements CatalogDriver
         return false;
     }
 
-    protected function normalizeQuery(string $query): string {
+    protected function normalizeQuery(string $query): string
+    {
 
         if (! preg_match('/\/$/', $query)) {
             $query = $query . '/';
         }
 
-        if (! preg_match('/^http:\/$/', $query)) {
+        if (! preg_match('/^https*:\//', $query)) {
             $query = 'https://' . $this->getCode() . '/r/' . $query;
         }
 
