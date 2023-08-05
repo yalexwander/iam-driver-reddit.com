@@ -38,7 +38,7 @@ class RedditFetcherDriver extends AbstractFetcherDriver implements FetchDriverIn
             $catalog = (new CatalogDriverFactory($this->appConfig))
                 ->getCatalogDriver($source["url"], ['source' => $source]);
 
-            $this->posts = $catalog->queryCatalog($normalizedURL);
+            $this->posts = $catalog->queryCatalog($source["url"]);
         } else {
             $json = Browser::getAsString($normalizedURL);
             $prePosts = json_decode($json, true);
@@ -55,7 +55,8 @@ class RedditFetcherDriver extends AbstractFetcherDriver implements FetchDriverIn
         return $this->posts;
     }
 
-    protected function processPost(array $post, ?string $parentId = null) : void {
+    protected function processPost(array $post, ?string $parentId = null): void
+    {
         if (empty($this->threadId)) {
             $this->threadId = $post['id'];
             $this->threadUrl = $post['url'];
@@ -93,19 +94,19 @@ class RedditFetcherDriver extends AbstractFetcherDriver implements FetchDriverIn
                 $this->processPost($childPost['data'], $id);
             }
         }
-
     }
 
-    protected function normalizeURL(string $url) :string {
+    protected function normalizeURL(string $url): string
+    {
         return preg_replace('/\/$/', '.json', $url);
     }
 
-    protected function isCatalogQuery(Source $source): bool {
+    protected function isCatalogQuery(Source $source): bool
+    {
         if (preg_match('/\/comments\//', $source["url"])) {
             return false;
         } else {
             return true;
         }
     }
-
 }
